@@ -70,10 +70,9 @@ class Owner(models.Model):
     owner_normalized_phonenumber = PhoneNumberField("Нормализованный номер владельца:",
                                     blank=True,
                                     db_index=True)
-    ownership = models.ForeignKey(Flat, blank=True, related_name='flats_owned',
-                                    null=True, on_delete=models.CASCADE,
-                                    verbose_name='Квартиры в собственности:')
-    
+    ownership = models.ManyToManyField(Flat, blank=True, related_name='flats_owner',
+                                    verbose_name='Квартиры в собственности:', db_index=True)
+
     def __str__(self):
         return f'{self.owner}, тел.: {self.owner_normalized_phonenumber}'
 
