@@ -5,12 +5,15 @@ import phonenumbers
 
 def populate_normalized_numbers(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-
-    for flat in Flat.objects.all():
-        normalized_phonenumber = phonenumbers.parse(flat.owners_phonenumber, 'RU')
-        if phonenumbers.is_valid_number(normalized_phonenumber):
-            flat.pure_phonenumber = f"+{normalized_phonenumber.country_code}{normalized_phonenumber.national_number}"
-            flat.save()
+    
+    flats = Flat.objects.all()
+    for flat in flats.iterator():
+        if flat.owners_phonenumber:
+            unparsed_number = flat.owners_phonenumber
+            parsed_number = phonenumbers.parse(unparsed_number, 'RU')
+            if phonenumbers.is_possible_number(parsed_number) and phonenumbers.is_valid_number(parsed_number):
+                flat.pure_phonenumber = phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.NATIONAL)
+                flat.save()
 
 
 class Migration(migrations.Migration):

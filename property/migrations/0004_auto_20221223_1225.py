@@ -6,12 +6,8 @@ from django.db import migrations
 def populate_new_building(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
 
-    for flat in Flat.objects.all():
-        if flat.construction_year >= 2015:
-            flat.new_building=True
-        else:
-            flat.new_building=False
-        flat.save()
+    flats = Flat.objects.filter(construction_year__gt=2014).update(new_building=True)
+    flats = Flat.objects.filter(construction_year__lt=2015).update(new_building=False)
 
 
 class Migration(migrations.Migration):
