@@ -11,12 +11,12 @@ def populate_owners(apps, schema_editor):
     for flat in flats.iterator():
         owner, created = Owner.objects.update_or_create(
                 name = flat.owner,
-                owner_phonenumber=flat.owners_phonenumber,
-                owner_normalized_phonenumber=flat.pure_phonenumber
+                phonenumber=flat.owners_phonenumber,
+                normalized_phonenumber=flat.pure_phonenumber
                 defaults={
                     'name': flat.owner,
-                    'owners_phonenumber': flat.owners_phonenumber,
-                    'owner_normalized_phonenumber': flat.pure_phonenumber}
+                    'phonenumber': flat.owners_phonenumber,
+                    'normalized_phonenumber': flat.pure_phonenumber}
         )
         owner.save()
 
@@ -28,8 +28,8 @@ def populate_flats(apps, schema_editor):
     for flat in flats.iterator():
         object, created = Owner.objects.update_or_create(
             owner=flat.owner,
-            owner_phonenumber=flat.owners_phonenumber,
-            owner_normalized_phonenumber=flat.pure_phonenumber,
+            phonenumber=flat.owners_phonenumber,
+            normalized_phonenumber=flat.pure_phonenumber,
             )
         if created:
             object.owners.set(flat)
